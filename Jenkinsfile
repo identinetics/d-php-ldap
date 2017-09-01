@@ -31,12 +31,12 @@ pipeline {
                     git clone git@github.com:identinetics/d-php-ldap.git
                     cd d-php-ldap
                     git submodule update --init
-                    ln -s conf.sh.default conf.sh
-                    ln -s ldapenv.conf.default ldapenv.conf
                 else
                     cd d-php-ldap
                     git pull
                 fi
+                ln -sf conf.sh.default conf.sh
+                ln -sf ldapenv.conf.default ldapenv.conf
                 ./dscripts/build.sh
                 ./dscripts/run.sh -I
                 '''
