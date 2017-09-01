@@ -26,17 +26,17 @@ if (ldap_bind($connect, $userdn, $userpw)) {
 }
 
 $search = ldap_search($connect, $basedn, '(objectclass=*)');
-if (ldap_errno > 0) {
+if (ldap_errno($connect) > 0) {
     print("ldap search failed with LDAP error " . ldap_error($connect));
     exit(3);
 }
 
 $entries = ldap_get_entries($connect, $search);
-if (!ldap_errno) {
-    fwrite(STDERR, "ldap_get_entries failed" . ldap_error($connect) . "\n");
+if (!$entries) {
+    fwrite(STDERR, "ldap_get_entries failed " . ldap_error($connect) . "\n");
     exit(4);
 } elseif (sizeof($entries) > 0) {
-    print("Search returned " . sizeof($entries) . " entries.\n");
+    print("Search returned " . sizeof($entries) . " entries. Test OK.\n");
 } else {
     print("No entries found with basedn $basedn and (objectclass=*)\n");
     exit(5);

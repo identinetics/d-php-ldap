@@ -9,4 +9,5 @@ RUN yum -y update \
  && yum -y install php php-ldap \
  && yum clean all
 
-CMD [ "/opt/bin/test_ldap.php" ]
+COPY test_ldap.php /opt/bin/
+CMD [ "php", "/opt/bin/test_ldap.php" ]
