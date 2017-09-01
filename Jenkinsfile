@@ -13,6 +13,7 @@ pipeline {
         stage('Test PHP client library') {
             steps {
                 sh '''
+                echo "lddap_ip job parameter $ldap_ip"
                 ln -sf ldapenv.conf.default ldapenv.conf
                 ./dscripts/run.sh -I
                 '''
