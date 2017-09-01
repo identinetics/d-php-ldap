@@ -1,0 +1,5 @@
+BASEDN=o=BMUKK
+LDAPURI=ldap://localhost:8389
+LDAPDN=cn=test.user1234567,ou=user,ou=ph08,o=BMUKK
+LDAPPW=test
+USERCN=cn=test.user1234567

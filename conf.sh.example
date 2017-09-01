@@ -1,0 +1,56 @@
+#!/usr/bin/env bash
+
+main() {
+    SCRIPTDIR=$(cd $(dirname $BASH_SOURCE[0]) && pwd)
+    source $SCRIPTDIR/dscripts/conf_lib.sh  $@         # load library functions
+    configlib_version=2  # compatible version of conf_lib.sh
+    check_version $configlib_version
+    # do_not_build $@ # uncomment this line to pull/load image
+    init_sudo
+    _set_image_and_container_name
+    _set_run_args
+}
+
+
+_set_image_and_container_name() {
+    # IMGID qualifies image, container, user and IP adddress; this is helpful for managing
+    # processes on the docker host etc.
+    IMGID='46'  # range from 02 .. 99; must be unique per node (registered in github.com/identinetics/dscripts/templates/assigned-uids.adoc)
+    PROJSHORT='phpldaptest'
+    SERVICEDESCRIPTION=php_ldap_test
+    set_staging_env
+    export IMAGENAME="r2h2/${PROJSHORT}"  # you may or may not want to have an image id and/or staging tag
+    export CONTAINERNAME="${PROJSHORT}"
+    export DOCKER_REGISTRY=''  # blank for index.docker.io
+}
+
+
+_set_run_args() {
+    export ENVSETTINGS="--env-file=ldapenv.conf"
+    export STARTCMD=''  # set to override image default
+}
+
+
+create_intercontainer_network() {
+    # Create a local network on the docker host. As the default docker0 bridge has dynamic
+    # addresses, a custom bridge is created allowing predictable addresses.
+    network='dockernet'
+    set +e  # errexit off
+    $sudo docker network ls | awk '{print $2}' | grep $network > /dev/null
+    if (( $? == 1)); then
+        $sudo docker network create --driver bridge --subnet=10.1.1.0/24 \
+                  -o com.docker.network.bridge.name=br-$network $network
+    fi
+    export NETWORKSETTINGS="
+        --net $network
+        --ip 10.1.1.${IMGID}
+    "
+}
+
+
+setup_vol_mapping() {
+    export VOLLIST=''
+    export VOLMAPPING=''
+}
+
+main $@
