@@ -1,0 +1,4 @@
+= Funktionstest PHP LDAP Library
+
+Das Testscript test_ldap.php prüft ob im angegeben LDAP SErver Daten abgefragt werden können.
+Ein postives Testresultat bedingt, dass die Abfrage ein nicht-leeres Resultat liefert.
