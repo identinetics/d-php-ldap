@@ -13,6 +13,7 @@ pipeline {
         stage('Test PHP client library') {
             steps {
                 sh '''
+                ln -sf ldapenv.conf.default ldapenv.conf
                 ./dscripts/run.sh -I
                 '''
             }
